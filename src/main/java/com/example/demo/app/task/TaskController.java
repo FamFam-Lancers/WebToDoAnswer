@@ -41,13 +41,13 @@ public class TaskController {
      */
     @GetMapping
     public String task(TaskForm taskForm, Model model) {
-    	
+
     	//新規登録か更新かを判断する仕掛け
         taskForm.setNewTask(true);
-        
+
         //Taskのリストを取得する
         List<Task> list = taskService.findAll();
-        
+
         model.addAttribute("list", list);
         model.addAttribute("title", "タスク一覧");
 
@@ -59,7 +59,6 @@ public class TaskController {
      * @param taskForm
      * @param result
      * @param model
-     * @param principal
      * @return
      */
     @PostMapping("/insert")
@@ -74,7 +73,7 @@ public class TaskController {
 //      task.setTitle(taskForm.getTitle());
 //      task.setDetail(taskForm.getDetail());
 //      task.setDeadline(taskForm.getDeadline());
-    	
+
         if (!result.hasErrors()) {
         	// Nakano 修正
         	//TaskFormのデータをTaskに格納
@@ -106,15 +105,15 @@ public class TaskController {
 
     	//Taskを取得(Optionalでラップ)
         Optional<Task> taskOpt = taskService.getTask(id);
-        
+
         //TaskFormへの詰め直し
         Optional<TaskForm> taskFormOpt = taskOpt.map(t -> makeTaskForm(t));
-        
+
         //TaskFormがnullでなければ中身を取り出し
         if(taskFormOpt.isPresent()) {
         	taskForm = taskFormOpt.get();
         }
-		
+
         model.addAttribute("taskForm", taskForm);
         List<Task> list = taskService.findAll();
         model.addAttribute("list", list);
@@ -123,12 +122,11 @@ public class TaskController {
 
         return "task/index";
     }
-    
+
     /**
      * タスクidを取得し、一件のデータ更新
      * @param taskForm
      * @param result
-     * @param id
      * @param model
      * @param redirectAttributes
      * @return
@@ -140,12 +138,12 @@ public class TaskController {
     	@RequestParam("taskId") int taskId,
     	Model model,
     	RedirectAttributes redirectAttributes) {
-        
+
         if (!result.hasErrors()) {
         	// Nakano move
         	//TaskFormのデータをTaskに格納
         	Task task = makeTask(taskForm, taskId);
-        	
+
         	//更新処理、フラッシュスコープの使用、リダイレクト（個々の編集ページ）
         	taskService.update(task);
         	redirectAttributes.addFlashAttribute("complete", "変更が完了しました");
@@ -167,7 +165,7 @@ public class TaskController {
     public String delete(
     	@RequestParam("taskId") int id,
     	Model model) {
-    	
+
     	//タスクを一件削除しリダイレクト
         taskService.deleteById(id);
         return "redirect:/task";
@@ -198,7 +196,7 @@ public class TaskController {
      * @return
      */
     private TaskForm makeTaskForm(Task task) {
-    	
+
         TaskForm taskForm = new TaskForm();
 
         taskForm.setTypeId(task.getTypeId());
@@ -206,7 +204,7 @@ public class TaskController {
         taskForm.setDetail(task.getDetail());
         taskForm.setDeadline(task.getDeadline());
         taskForm.setNewTask(false);
-        
+
         return taskForm;
     }
 }
