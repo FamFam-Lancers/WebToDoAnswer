@@ -11,7 +11,7 @@ public class Task {
     private String title;
     private String detail;
     private LocalDateTime deadline;
-    
+
 	public int getId() {
 		return id;
 	}
@@ -54,6 +54,5 @@ public class Task {
 	public void setDeadline(LocalDateTime deadline) {
 		this.deadline = deadline;
 	}
-    
-    
+
 }
